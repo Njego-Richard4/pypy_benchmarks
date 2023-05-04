@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 """ Usage: runner.py <result filename> <path to pypy-c> <revnumber>
 """
 from __future__ import division, print_function
@@ -34,7 +34,7 @@ class WrongBenchmark(Exception):
 
 
 def run_and_store(benchmark_set, result_filename, changed_path, revision=0,
-                  options='', branch='default', args='', upload=False,
+                  options='', branch='default', args='', upload=False,memory= False,
                   fast=False, baseline_path=sys.executable, full_store=False):
     funcs = perf.BENCH_FUNCS.copy()
     funcs.update(perf._FindAllBenchmarks(benchmarks.__dict__))
@@ -43,6 +43,8 @@ def run_and_store(benchmark_set, result_filename, changed_path, revision=0,
             '--no_charts']
     if fast:
         opts += ['--fast']
+    if memory:
+        opts += ['--track_memory']
     if args:
         opts += ['--args', args]
     if full_store:
@@ -190,6 +192,8 @@ def main(argv):
     benchmark_group.add_option(
         "--fast", default=False, action="store_true",
         help="Run shorter benchmark runs.")
+    benchmark_group.add_option("-m", "--track_memory", default=False, action="store_true",
+                      help="Track memory usage. This only works on Linux.")
     benchmark_group.add_option(
         "--full-store", default=False, action="store_true",
         help="Run the benchmarks with the --no-statistics flag.")
@@ -305,12 +309,13 @@ def main(argv):
     branch = options.upload_branch
     revision = options.upload_revision
     force_host = options.force_host
+    memory = options.track_memory
 
     if options.niceness is not None:
         os.nice(options.niceness - os.nice(0))
 
     results = run_and_store(benchmarks, output_filename, changed_path,
-                            revision, args=args, fast=fast,
+                            revision, args=args, memory= memory, fast=fast,
                             baseline_path=baseline_path,
                             full_store=full_store, branch=branch)
 
