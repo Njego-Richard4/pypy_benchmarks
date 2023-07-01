@@ -22,7 +22,8 @@ if sys.version_info[0] < 3:
 BENCHMARK_DEFAULT += perf._FindAllBenchmarks(benchmarks.__dict__).keys()
 BENCHMARK_FULL = BENCHMARK_DEFAULT + [
                  'pickle', 'unpickle', 'pickle_list', 'unpickle_list',
-                 'pickle_dict',
+                 'pickle_dict','call_simple', 'nbody', 'unpack_sequence', 
+                 'regex_effbot'
                  ]
 
 CHANGED = 'changed'
@@ -52,11 +53,16 @@ def run_and_store(benchmark_set, result_filename, changed_path, revision=0,
     opts += [baseline_path, changed_path]
     results = perf.main(opts, funcs)
     f = open(str(result_filename), "w")
-    results = [(name, result.__class__.__name__, result.__dict__)
+    results = [(name, result.__class__.__name__, result.__dict__.get('base_times'))
            for name, result in results]
+    opts += ['--track_memory']
+    result2 = perf.main(opts, funcs)
+    result2 = [(name, result.__dict__.get('max_base'))
+           for name, result in result2]
     f.write(json.dumps({
         'revision': revision,
         'results': results,
+        'memory' : result2,
         'options': options,
         'branch': branch,
         }, indent=2))

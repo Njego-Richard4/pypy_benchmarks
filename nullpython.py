@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python2
 '''This is a dummy that does nothing except that it returns 1
 second for every round of the benchmark.
 

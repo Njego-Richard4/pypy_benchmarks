@@ -676,7 +676,7 @@ def CompareMultipleRuns(base_times, changed_times, options):
         human consumption.
     """
     if options.no_statistics or len(base_times) ==0 or len(changed_times) == 0:
-        return RawResult(base_times, changed_times)
+        return RawResult(base_times, changed_times) 
     if len(base_times) != len(changed_times):
         print("Base:")
         print(base_times)
@@ -773,15 +773,16 @@ def CallAndCaptureOutput(command, env=None, track_memory=False, inherit_env=[]):
     if track_memory:
         future = MemoryUsageFuture(subproc.pid)
     result, err = subproc.communicate()
+    # print("hhhh", [float(line) for line in result.splitlines()])
     if subproc.returncode == 42:
         assert 'Python3' in result
         return '', None
     elif subproc.returncode != 0:
-        print(result)
         raise RuntimeError("Benchmark died (returncode: %d): %s" %
                            (subproc.returncode, err))
     if track_memory:
         mem_usage = future.GetMemoryUsage()
+    # print("hdhdh",mem_usage)
     return result, mem_usage
 
 
@@ -1301,7 +1302,7 @@ def MeasureUnpackSequence(python, options):
         of memory usage samples in kilobytes.
     """
     bm_path = Relative("performance/bm_unpack_sequence.py")
-    return MeasureGeneric(python, options, bm_path, iteration_scaling=1000)
+    return MeasureGeneric(python, options, bm_path, iteration_scaling=1)
 
 
 def BM_unpack_sequence(*args, **kwargs):

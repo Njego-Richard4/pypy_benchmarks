@@ -90,7 +90,7 @@ for name in ['xml', 'text']:
                      globals(), bm_env={'PYTHONPATH': relative('lib/genshi')},
                      extra_args=['--benchmark=' + name])
 
-for name in ['float', 'nbody_modified', 'meteor-contest', 'fannkuch',
+for name in ['float','fib', 'nbody_modified', 'meteor-contest', 'fannkuch',
              'spectral-norm', 'chaos', 'telco', 'go', 'pyflate-fast',
              'raytrace-simple', 'crypto_pyaes', 'bm_mako', 'bm_chameleon',
              'json_bench', 'pidigits', 'hexiom2', 'eparse', 'deltablue',
